@@ -30,23 +30,22 @@ Hosting: Vercel
 
 # How to Run Locally
 
-# Clone the repository:
+1. Clone the repository:
 
-git clone https://github.com/Bhavneet345/BigViz-Studio.git
+   git clone https://github.com/Bhavneet345/BigViz-Studio.git
 
-# Navigate to the project directory:
+2. Navigate to the project directory:
 
-cd BigViz-Studio
+   cd BigViz-Studio
 
-# Install dependencies:
+3. Install dependencies:
 
-npm install
+   npm install
 
-# Run the development server:
+4. Run the development server:
 
-npm run dev
-
-Open http://localhost:3000 in your browser to view the app.
+   npm run dev
+   Open http://localhost:3000 in your browser to view the app.
 
 # Contributing
 
