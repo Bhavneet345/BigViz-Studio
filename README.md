@@ -4,7 +4,7 @@ BigViz Studio is a web-based application designed to visualize and filter large 
 
 # Live Demo
 
-Check out the live version of the project here: BigViz Studio
+Check out the live version of the project here: https://big-data-dashboard-1s9lyu0zg-bhavneet345s-projects.vercel.app/
 
 # Key Features
 
