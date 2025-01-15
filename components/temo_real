@@ -1,0 +1,194 @@
+// import React, { useEffect, useState } from "react";
+// import Plot from "react-plotly.js";
+
+// interface RealTimeChartProps {
+//   endpoint: string;
+//   chartType: string;
+//   xField: string; // Field for x-axis
+//   yField: string; // Field for y-axis
+//   zField?: string; // Optional field for z-axis (3D)
+//   maxDataPoints?: number; // Optional limit for the number of data points
+// }
+
+// const RealTimeChart: React.FC<RealTimeChartProps> = ({
+//   endpoint,
+//   chartType,
+//   xField,
+//   yField,
+//   zField,
+//   maxDataPoints = 1000, // Default limit for data points
+// }) => {
+//   const [data, setData] = useState<{ x: string[]; y: number[]; z?: number[] }>({
+//     x: [],
+//     y: [],
+//     z: [],
+//   });
+//   const [errorMessage, setErrorMessage] = useState("");
+//   const [isReconnecting, setIsReconnecting] = useState(false);
+
+//   useEffect(() => {
+//     if (!endpoint.startsWith("ws://") && !endpoint.startsWith("wss://")) {
+//       setErrorMessage("Invalid WebSocket URL. Please use ws:// or wss://.");
+//       return;
+//     }
+
+//     let ws: WebSocket | null = null;
+//     let reconnectTimeout: NodeJS.Timeout | null = null;
+
+//     const connectWebSocket = () => {
+//       setErrorMessage("");
+//       setIsReconnecting(false);
+
+//       ws = new WebSocket(endpoint);
+
+//       ws.onopen = () => {
+//         console.log("WebSocket connection established.");
+//       };
+
+//       ws.onmessage = (event) => {
+//         try {
+//           const parsedData = JSON.parse(event.data);
+
+//           if (!parsedData[xField] || !parsedData[yField] || (zField && !parsedData[zField])) {
+//             setErrorMessage("Incoming data does not match the expected fields.");
+//             return;
+//           }
+
+//           setData((prevData) => {
+//             const newData = {
+//               x: [...prevData.x, parsedData[xField]].slice(-maxDataPoints),
+//               y: [...prevData.y, parsedData[yField]].slice(-maxDataPoints),
+//               z: zField
+//                 ? [...(prevData.z || []), parsedData[zField]].slice(-maxDataPoints)
+//                 : prevData.z,
+//             };
+//             return newData;
+//           });
+
+//           setErrorMessage(""); // Clear error if data is valid
+//         } catch (err) {
+//           setErrorMessage("Invalid data format from server.");
+//         }
+//       };
+
+//       ws.onerror = () => {
+//         setErrorMessage("Error with WebSocket connection.");
+//       };
+
+//       ws.onclose = () => {
+//         console.log("WebSocket connection closed.");
+//         setErrorMessage("WebSocket connection lost. Attempting to reconnect...");
+//         reconnectTimeout = setTimeout(() => {
+//           setIsReconnecting(true);
+//           connectWebSocket();
+//         }, 5000);
+//       };
+//     };
+
+//     connectWebSocket();
+
+//     return () => {
+//       if (ws) ws.close();
+//       if (reconnectTimeout) clearTimeout(reconnectTimeout);
+//     };
+//   }, [endpoint, xField, yField, zField, maxDataPoints]);
+
+//   const renderPlot = () => {
+//     switch (chartType) {
+//       case "2D Line":
+//         return (
+//           <Plot
+//             data={[
+//               {
+//                 x: data.x,
+//                 y: data.y,
+//                 type: "scatter",
+//                 mode: "lines+markers",
+//                 marker: { color: "#E07A5F" },
+//               },
+//             ]}
+//             layout={{
+//               title: "2D Line Chart",
+//               xaxis: { title: xField },
+//               yaxis: { title: yField },
+//             }}
+//           />
+//         );
+
+//       case "2D Bar":
+//         return (
+//           <Plot
+//             data={[
+//               {
+//                 x: data.x,
+//                 y: data.y,
+//                 type: "bar",
+//                 marker: { color: "#81B29A" },
+//               },
+//             ]}
+//             layout={{
+//               title: "2D Bar Chart",
+//               xaxis: { title: xField },
+//               yaxis: { title: yField },
+//             }}
+//           />
+//         );
+
+//       case "3D Scatter":
+//         return (
+//           <Plot
+//             data={[
+//               {
+//                 x: data.x,
+//                 y: data.y,
+//                 z: data.z,
+//                 type: "scatter3d",
+//                 mode: "markers",
+//                 marker: { size: 5, color: "#4ECDC4" },
+//               },
+//             ]}
+//             layout={{
+//               title: "3D Scatter Plot",
+//               scene: {
+//                 xaxis: { title: xField },
+//                 yaxis: { title: yField },
+//                 zaxis: { title: zField },
+//               },
+//             }}
+//           />
+//         );
+
+//       case "Heatmap":
+//         return (
+//           <Plot
+//             data={[
+//               {
+//                 z: [data.y],
+//                 x: data.x,
+//                 type: "heatmap",
+//                 colorscale: "Viridis",
+//               },
+//             ]}
+//             layout={{
+//               title: "Heatmap",
+//               xaxis: { title: xField },
+//               yaxis: { title: yField },
+//             }}
+//           />
+//         );
+
+//       default:
+//         return <p>Invalid chart type selected.</p>;
+//     }
+//   };
+
+//   return (
+//     <div>
+//       {errorMessage && <p className="text-red-500">{errorMessage}</p>}
+//       {isReconnecting && <p className="text-yellow-500">Reconnecting to WebSocket...</p>}
+//       {renderPlot()}
+//     </div>
+//   );
+// };
+
+// export default RealTimeChart;
